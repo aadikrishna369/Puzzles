@@ -4,7 +4,7 @@ window.PUZZLES_TOOLS = [
     "slug": "image-to-pdf",
     "name": "Images to PDF",
     "tagline": "Turn a pile of photos into one polished PDF.",
-    "description": "Drag in as many images as you like, put them in order, rotate them, pick a page style and download a single PDF - with optional password, metadata and a live preview. Everything runs in your browser, so your images never leave your device.",
+    "description": "Drag in as many images as you like, put them in order, rotate them, pick a page style and download a single PDF - with optional password, metadata and a size estimate. Everything runs in your browser, so your images never leave your device.",
     "category": "Documents",
     "icon": "📄",
     "tags": [
