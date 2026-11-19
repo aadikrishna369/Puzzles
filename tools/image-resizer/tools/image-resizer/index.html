@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Resizer — Puzzles</title>
+<meta name="description" content="Resize images in your browser with pixel-perfect resampling. Nothing is uploaded.">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="glow g1" aria-hidden="true"></div>
+<div class="glow g2" aria-hidden="true"></div>
+<div class="overlay" aria-hidden="true"><p>Drop to replace the current image</p></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<div class="wrap">
+  <nav class="topbar">
+    <a class="ghost-btn" href="../index.html">← All tools</a>
+    <button type="button" class="ghost-btn danger" id="resetBtn" hidden>↻ New project</button>
+  </nav>
+
+  <header class="head rise">
+    <h1>Image Resizer</h1>
+    <p>Resize, upscale or shrink any image — sharp pixel art included. Everything happens on your device; nothing is uploaded.</p>
+  </header>
+
+  <section id="start" class="rise d1" aria-label="Load an image">
+    <label class="drop" id="drop" for="fileInput">
+      <span class="drop-icon" aria-hidden="true">🖼️</span>
+      <strong>Drop an image here</strong>
+      <span class="muted">or <u>browse your computer</u> · paste with Ctrl + V</span>
+      <span class="fmt">PNG · JPEG · WebP · GIF · BMP · SVG · AVIF · ICO</span>
+      <input class="sr" type="file" id="fileInput" accept="image/*">
+    </label>
+    <form class="urlbar" id="urlForm">
+      <label class="sr" for="urlInput">Image URL</label>
+      <input type="url" id="urlInput" placeholder="…or paste an image URL, e.g. https://example.com/photo.png" autocomplete="off">
+      <button type="submit" class="btn-sec">Load from URL →</button>
+    </form>
+  </section>
+
+  <section id="work" class="grid" hidden>
+    <div class="col">
+      <div class="card pop">
+        <div class="card-head">
+          <h2>Preview</h2>
+          <div class="seg" role="group" aria-label="Preview version">
+            <button type="button" id="viewOrig" aria-pressed="true">Original</button>
+            <button type="button" id="viewRes" aria-pressed="false" disabled>Resized</button>
+          </div>
+        </div>
+        <div class="stage" id="stage"><img id="preview" alt="Image preview" draggable="false"></div>
+        <p class="small muted" id="previewNote"></p>
+      </div>
+      <div class="card pop d2">
+        <h2>Image details</h2>
+        <dl class="info" id="info"></dl>
+        <button type="button" class="ghost-btn" id="replaceBtn">Choose another image…</button>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card pop d1">
+        <h2>Resize</h2>
+        <div class="seg" role="group" aria-label="Size units">
+          <button type="button" id="unitPx" aria-pressed="true">Pixels</button>
+          <button type="button" id="unitPct" aria-pressed="false">Percent</button>
+        </div>
+        <div class="row">
+          <div class="field"><label for="wInput">Width</label><div class="num"><input type="number" id="wInput" inputmode="decimal" min="1" step="any"><span class="suf" id="wSuf">px</span></div></div>
+          <button type="button" class="icon-btn" id="lockBtn" aria-pressed="true" aria-label="Lock aspect ratio" title="Lock aspect ratio">🔗</button>
+          <div class="field"><label for="hInput">Height</label><div class="num"><input type="number" id="hInput" inputmode="decimal" min="1" step="any"><span class="suf" id="hSuf">px</span></div></div>
+        </div>
+        <p class="sum small" id="sum"></p>
+
+        <div class="field gap"><label for="scaleRange">Scale <output id="scaleOut">100%</output></label>
+          <input type="range" id="scaleRange" min="5" max="400" step="1" value="100"></div>
+        <div class="chips" id="chips" role="group" aria-label="Quick scale">
+          <button type="button" class="chip" data-pct="25">25%</button>
+          <button type="button" class="chip" data-pct="50">50%</button>
+          <button type="button" class="chip" data-pct="75">75%</button>
+          <button type="button" class="chip" data-pct="100">100%</button>
+          <button type="button" class="chip" data-pct="200">200%</button>
+          <button type="button" class="chip" data-pct="300">300%</button>
+          <button type="button" class="chip" data-pct="400">400%</button>
+        </div>
+
+        <div class="field gap"><label for="preset">Preset sizes</label>
+          <select id="preset">
+            <option value="">Custom</option>
+            <option value="32,32">Favicon · 32 × 32</option>
+            <option value="512,512">App icon · 512 × 512</option>
+            <option value="1080,1080">Square post · 1080 × 1080</option>
+            <option value="1080,1920">Story · 1080 × 1920</option>
+            <option value="1200,630">Social card · 1200 × 630</option>
+            <option value="1500,500">Banner · 1500 × 500</option>
+            <option value="1280,720">HD · 1280 × 720</option>
+            <option value="1920,1080">Full HD · 1920 × 1080</option>
+            <option value="3840,2160">4K UHD · 3840 × 2160</option>
+          </select></div>
+        <button type="button" class="ghost-btn" id="resetSize">Reset to original size</button>
+      </div>
+
+      <div class="card pop d2">
+        <h2>Quality &amp; output</h2>
+        <div class="field"><label for="algo">Resampling algorithm</label>
+          <select id="algo">
+            <option value="nearest">Nearest neighbour (pixel art)</option>
+            <option value="box">Box (area average)</option>
+            <option value="bilinear">Bilinear</option>
+            <option value="bicubic">Bicubic</option>
+            <option value="mitchell">Mitchell</option>
+            <option value="lanczos" selected>Lanczos 3</option>
+            <option value="native">Browser smooth</option>
+          </select></div>
+        <p class="small muted" id="algoHint"></p>
+        <div class="field gap"><label for="fmt">Output format</label>
+          <select id="fmt">
+            <option value="auto">Same as original</option>
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/webp">WebP</option>
+          </select></div>
+        <div class="field gap" id="qRow"><label for="quality">Quality <output id="qOut">90</output></label>
+          <input type="range" id="quality" min="1" max="100" step="1" value="90"></div>
+        <div class="field gap" id="bgRow"><label for="bgColor">Background for transparent areas</label>
+          <input type="color" id="bgColor" value="#ffffff"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <button type="button" class="btn-pri" id="resizeBtn"><span class="spin" id="spin" hidden></span><span id="resizeLbl">Resize image</span></button>
+  <button type="button" class="btn-sec" id="dlBtn" disabled>Download ↓</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
