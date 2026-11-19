@@ -3,407 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Images → PDF</title>
-<style>
-:root{--bg:#0D0F17;--bg2:#121522;--card:#171A27;--elev:#1E2232;--line:#292D40;--text:#F4F3FF;--text2:#A0A3B8;--mute:#73778D;--dis:#55596B;--a:#8B7CFF;--a2:#A99AFF;--cyan:#45D6E8;--mint:#5CE0B5;--ok:#34D399;--err:#FB7185;--warn:#FBBF24;--info:#60A5FA}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
-.glow{position:fixed;inset:0;z-index:-1;overflow:hidden}
-.glow i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(110px);opacity:.15;animation:drift 24s ease-in-out infinite alternate}
-.glow i:nth-child(1){background:var(--a);top:-25vmax;left:-15vmax}
-.glow i:nth-child(2){background:var(--cyan);bottom:-30vmax;right:-15vmax;animation-delay:-9s}
-@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.12)}}
-main{max-width:980px;margin:0 auto;padding:56px 20px 130px;position:relative}
-header{text-align:center;margin-bottom:34px;animation:rise .8s both}
-h1{font-size:clamp(28px,5vw,44px);margin:0 0 8px;letter-spacing:-.02em;background:linear-gradient(120deg,var(--text),var(--a2) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{margin:0;color:var(--text2)}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.reset{position:absolute;top:18px;right:20px;background:var(--card);border:1px solid var(--line);color:var(--text2);padding:8px 14px;border-radius:12px;cursor:pointer;font:inherit;font-size:13.5px;transition:.25s}
-.reset:hover{border-color:var(--a);color:var(--text);background:var(--elev)}
-.reset.sure{border-color:var(--warn);color:var(--warn)}
-#drop{border:1.5px dashed var(--dis);border-radius:20px;background:rgba(23,26,39,.7);padding:46px 20px;text-align:center;cursor:pointer;transition:.25s;animation:rise .8s .1s both}
-#drop:hover,#drop.over{border-color:var(--a);background:rgba(139,124,255,.08);box-shadow:0 0 0 6px rgba(139,124,255,.08),0 20px 60px -20px rgba(139,124,255,.4)}
-#drop svg{width:44px;height:44px;stroke:var(--a2);fill:none;stroke-width:1.6;animation:float 3.2s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-6px)}}
-#drop b{display:block;margin-top:10px;font-size:17px}
-#drop span{color:var(--text2);font-size:13.5px}
-#drop u{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(69,214,232,.4)}
-.bar,.panel,.hint{display:none}
-.bar.show{display:flex;margin:30px 0 14px;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;animation:rise .5s both}
-.count{color:var(--text2)}.count b{color:var(--text)}
-.seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px}
-.seg button,.link{background:none;border:0;color:var(--mute);padding:7px 14px;border-radius:9px;cursor:pointer;font:inherit;font-size:13.5px;transition:.2s}
-.seg button:hover,.link:hover{color:var(--text)}
-.seg button.on{background:var(--elev);color:var(--text)}
-.link.del:hover{color:var(--err);background:rgba(251,113,133,.08)}
-.link:hover{background:var(--elev)}
-.panel.show{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;animation:rise .5s both}
-.f{display:flex;flex-direction:column;gap:6px;min-width:0}
-.f>span,summary{font-size:12.5px;color:var(--mute);letter-spacing:.02em}
-.wide{grid-column:1/-1}
-input[type=text],input[type=password],.fn{background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;width:100%;transition:.2s;outline:0}
-input:focus,.fn:focus-within{border-color:var(--a);box-shadow:0 0 0 3px rgba(139,124,255,.15)}
-.fn{display:flex;align-items:center;padding:0}
-.fn input{border:0;background:none;box-shadow:none;padding:9px 12px;flex:1;min-width:0}
-.fn em{color:var(--mute);font-style:normal;padding-right:12px}
-::placeholder{color:var(--dis)}
-#bgRow{display:none}#bgRow.show{display:flex;animation:rise .35s both}
-.clr{display:flex;align-items:center;gap:10px}
-input[type=color]{width:42px;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--bg2);padding:3px;cursor:pointer}
-code{color:var(--text2);font-size:13px}
-details{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
-summary{cursor:pointer;color:var(--text2)}summary small{color:var(--mute)}
-.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
-.hint.show{display:block;color:var(--mute);font-size:12.5px;margin:0 0 14px}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
-.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:grab;transition:transform .2s,border-color .2s,box-shadow .2s,opacity .2s}
-.card.fresh{animation:pop .45s cubic-bezier(.2,.9,.3,1.2) both}
-@keyframes pop{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:none}}
-.card:hover{transform:translateY(-3px);border-color:var(--dis);box-shadow:0 16px 36px -16px rgba(0,0,0,.8)}
-.card.drag{opacity:.35;transform:scale(.96)}
-.card .img{aspect-ratio:1;background:var(--bg) center/contain no-repeat;transition:transform .3s}
-.card .meta{padding:8px 10px;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-top:1px solid var(--line)}
-.num{position:absolute;top:8px;left:8px;min-width:24px;height:24px;border-radius:12px;padding:0 7px;background:rgba(13,15,23,.8);backdrop-filter:blur(6px);border:1px solid var(--line);font-size:12px;display:grid;place-items:center}
-.x,.tools{position:absolute;opacity:0;transition:.2s}
-.x{top:8px;right:8px}
-.tools{left:0;right:0;bottom:42px;display:flex;justify-content:center;gap:4px;transform:translateY(4px)}
-.card:hover .x,.card:hover .tools,.card:focus-within .x,.card:focus-within .tools{opacity:1;transform:none}
-@media(hover:none){.x,.tools{opacity:1;transform:none}}
-.x,.tools button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:rgba(13,15,23,.85);color:var(--text);cursor:pointer;font-size:14px;line-height:1;transition:.15s}
-.tools button:hover{background:var(--a);border-color:var(--a)}
-.x:hover{background:var(--err);border-color:var(--err);color:var(--bg)}
-.dock{position:fixed;left:50%;bottom:22px;transform:translate(-50%,140px);transition:transform .5s cubic-bezier(.2,.9,.3,1.1);z-index:5;display:flex;align-items:center;gap:12px;background:rgba(23,26,39,.88);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:8px 8px 8px 18px;max-width:calc(100vw - 24px)}
-.dock.show{transform:translate(-50%,0)}
-#est{color:var(--text2);font-size:13.5px;white-space:nowrap}
-#go{border:0;color:var(--bg);font:inherit;font-weight:650;font-size:15px;padding:13px 26px;border-radius:14px;cursor:pointer;background:linear-gradient(120deg,var(--a),var(--cyan));box-shadow:0 10px 30px -10px rgba(139,124,255,.7);transition:.25s;display:flex;align-items:center;gap:10px;white-space:nowrap}
-#go:hover{transform:translateY(-2px);box-shadow:0 14px 38px -8px rgba(69,214,232,.6)}
-#go:disabled{opacity:.75;cursor:wait;transform:none}
-.spin{width:16px;height:16px;border:2px solid rgba(13,15,23,.25);border-top-color:var(--bg);border-radius:50%;animation:s .7s linear infinite;display:none}
-#go:disabled .spin{display:block}
-@keyframes s{to{transform:rotate(360deg)}}
-.toast{position:fixed;top:18px;left:50%;transform:translate(-50%,-80px);background:var(--elev);border:1px solid var(--line);padding:10px 18px;border-radius:12px;transition:.4s;z-index:9;font-size:14px}
-.toast.show{transform:translate(-50%,0)}
-.toast.ok{border-color:var(--ok)}.toast.bad{border-color:var(--err)}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
+<title>Puzzles - Every task has a missing piece</title>
+<meta name="description" content="Puzzles is a growing hub of fast, friendly web tools for everyday tasks. Convert, resize, solve and simplify.">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<div class="glow"><i></i><i></i></div>
+<div id="site-header"></div>
 <main>
-  <button class="reset" id="reset">↻ New project</button>
-  <header>
-    <h1>Images to PDF</h1>
-    <p>Add your images, arrange them, and get a single PDF. Everything stays in your browser.</p>
-  </header>
-
-  <div id="drop" tabindex="0" role="button" aria-label="Add images">
-    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
-    <b>Drag &amp; drop images here</b>
-    <span>or <u>browse your computer</u> · any number of files · JPG, PNG, WebP, GIF, BMP</span>
-    <input id="file" type="file" accept="image/*" multiple hidden>
-  </div>
-
-  <div class="bar" id="bar">
-    <div class="count"><b id="n">0</b> images</div>
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <button class="link" id="rotL" title="Rotate all 90° left">↺ Rotate all</button>
-      <button class="link" id="rotR" title="Rotate all 90° right">↻ Rotate all</button>
-      <button class="link del" id="clear">Clear all</button>
+<section class="wrap hero">
+  <div>
+    <span class="pill"><b></b> New tools land here all the time</span>
+    <h1>Every task has a <span class="grad">missing piece.</span></h1>
+    <p class="lead">Puzzles is a growing collection of fast, friendly tools for everyday work &mdash; convert, resize, solve and simplify. Open one, finish the job, get on with your day.</p>
+    <div class="cta"><a class="btn" href="#tools">Explore the tools</a><a class="btn ghost" href="#how">How it works</a></div>
+    <div class="stats">
+      <div><b id="stat-tools">&ndash;</b>tools ready to use</div>
+      <div><b>100%</b>in your browser</div>
+      <div><b>0</b>sign-ups needed</div>
     </div>
   </div>
+  <div class="art" aria-hidden="true">
+    <svg class="piece p1" viewBox="0 0 32 32"><path d="M6 6h7.5a3.5 3.5 0 1 1 7 0H28v7.5a3.5 3.5 0 1 0 0 7V28H6z"/></svg>
+    <svg class="piece p2" viewBox="0 0 32 32"><path d="M6 6h7.5a3.5 3.5 0 1 1 7 0H28v7.5a3.5 3.5 0 1 0 0 7V28H6z"/></svg>
+    <svg class="piece p3" viewBox="0 0 32 32"><path d="M6 6h7.5a3.5 3.5 0 1 1 7 0H28v7.5a3.5 3.5 0 1 0 0 7V28H6z"/></svg>
+    <svg class="piece p4" viewBox="0 0 32 32"><path d="M6 6h7.5a3.5 3.5 0 1 1 7 0H28v7.5a3.5 3.5 0 1 0 0 7V28H6z"/></svg>
+  </div>
+</section>
 
-  <section class="panel" id="panel">
-    <label class="f wide"><span>File name</span><div class="fn"><input id="fname" type="text" value="images" maxlength="80" spellcheck="false"><em>.pdf</em></div></label>
-    <div class="f"><span>Page layout</span><div class="seg" id="mode"><button data-m="fit" class="on">Fit to image</button><button data-m="a4">A4 pages</button></div></div>
-    <div class="f" id="bgRow"><span>A4 page background</span><div class="clr"><input type="color" id="bg" value="#ffffff"><code id="bgv">#FFFFFF</code></div></div>
-    <div class="f"><span>Image order</span><div class="seg" id="sort"><button data-s="custom" class="on">Custom</button><button data-s="az">A–Z</button><button data-s="za">Z–A</button></div></div>
-    <label class="f"><span>Password (optional)</span><input id="pw" type="password" placeholder="None" autocomplete="new-password"></label>
-    <details class="wide"><summary>PDF metadata <small>(none by default)</small></summary>
-      <div class="mg">
-        <input type="text" id="m-Title" placeholder="Title">
-        <input type="text" id="m-Author" placeholder="Author">
-        <input type="text" id="m-Subject" placeholder="Subject">
-        <input type="text" id="m-Keywords" placeholder="Keywords">
-      </div>
-    </details>
-  </section>
-  <p class="hint" id="hint">Drag cards to reorder, or use the ◀ ▶ buttons. Page 1 is first.</p>
-  <div id="grid"></div>
+<section class="sec wrap" id="tools">
+  <div class="head reveal">
+    <div><span class="kicker">The toolbox</span><h2>Pick a piece. <span class="grad">Solve the task.</span></h2>
+    <p class="sub">Every tool is built to do one job really well. New ones appear here automatically.</p></div>
+    <a class="btn ghost" href="tools/index.html">View all tools &rarr;</a>
+  </div>
+  <div class="grid" id="hub" data-limit="6"></div>
+  <div class="empty" id="empty"><h3>No tools yet</h3><p>Create a folder inside <code>tools/</code> with an <code>index.html</code> and an <code>info.txt</code> &mdash; it shows up here on its own.</p></div>
+</section>
+
+<section class="sec wrap">
+  <div class="head reveal"><div><span class="kicker">Why Puzzles</span><h2>Built to get out of your way.</h2></div></div>
+  <div class="grid f4">
+    <div class="card feat reveal" style="--d:0ms"><div class="ic">⚡</div><h3>Fast by default</h3><p>No heavy installs or loading screens. Open a tool and you&rsquo;re working in seconds.</p></div>
+    <div class="card feat reveal" style="--d:80ms"><div class="ic">🔒</div><h3>Private by design</h3><p>Our tools do the work in your browser wherever possible, so your files stay on your device.</p></div>
+    <div class="card feat reveal" style="--d:160ms"><div class="ic">🎯</div><h3>One job, done well</h3><p>Each tool is focused and uncluttered &mdash; the right controls, nothing you don&rsquo;t need.</p></div>
+    <div class="card feat reveal" style="--d:240ms"><div class="ic">🧩</div><h3>Always growing</h3><p>The toolbox expands regularly. Got an idea? Tell us and it might be the next piece.</p></div>
+  </div>
+</section>
+
+<section class="sec wrap" id="how">
+  <div class="head reveal"><div><span class="kicker">How it works</span><h2>Three steps. That&rsquo;s the whole puzzle.</h2></div></div>
+  <div class="grid f3">
+    <div class="card step reveal" style="--d:0ms"><div class="n grad">01</div><h3>Choose a tool</h3><p class="sub">Browse the toolbox or search for the job you need done.</p></div>
+    <div class="card step reveal" style="--d:100ms"><div class="n grad">02</div><h3>Add your stuff</h3><p class="sub">Drop in your files or details. Tweak the options if you like.</p></div>
+    <div class="card step reveal" style="--d:200ms"><div class="n grad">03</div><h3>Take the result</h3><p class="sub">Download or copy your result and carry on with your day.</p></div>
+  </div>
+</section>
+
+<section class="sec wrap">
+  <div class="band reveal"><h2>Missing a piece? <span class="grad">Tell us.</span></h2>
+  <p class="sub">Have a task that deserves its own tool? Suggest it &mdash; the best ideas make it into the toolbox.</p>
+  <a class="btn" href="contact.html">Suggest a tool</a></div>
+</section>
 </main>
-
-<div class="dock" id="dock">
-  <span id="est"></span>
-  <button id="go"><span class="spin"></span><span id="gol">Convert to PDF</span></button>
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
-(function(){
-  const $=s=>document.querySelector(s);
-  const grid=$('#grid'),drop=$('#drop'),input=$('#file');
-  let items=[],mode='fit',sortMode='custom',uid=0,dragEl=null,startOrder='',estTok=0,estTimer;
-  const cache=new Map();
-  const get=id=>items.find(i=>i.id==id);
-  const rotOf=it=>((it.rot%360)+360)%360;
-  const bg=()=>$('#bg').value;
-  const fmt=n=>n<1048576?Math.max(1,Math.round(n/1024))+' KB':(n/1048576).toFixed(2)+' MB';
-
-  function toast(t,k){const el=$('#toast');el.textContent=t;el.className='toast show '+(k||'');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2800)}
-
-  /* ---------- adding / cards ---------- */
-  function addFiles(list){
-    const files=[...list].filter(f=>f.type.startsWith('image/'));
-    if(!files.length){toast('No image files found','bad');return}
-    files.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
-    files.forEach((f,i)=>{
-      const it={id:++uid,file:f,url:URL.createObjectURL(f),rot:0};
-      items.push(it);
-      const c=document.createElement('div');
-      c.className='card fresh';c.draggable=true;c.dataset.id=it.id;
-      c.style.animationDelay=Math.min(i,12)*40+'ms';
-      c.innerHTML='<div class="img"></div><div class="num"></div><button class="x" data-a="x" title="Remove">✕</button><div class="tools"><button data-a="l" title="Move earlier">◀</button><button data-a="rl" title="Rotate left">↺</button><button data-a="rr" title="Rotate right">↻</button><button data-a="r" title="Move later">▶</button></div><div class="meta"></div>';
-      c.querySelector('.img').style.backgroundImage='url("'+it.url+'")';
-      c.querySelector('.meta').textContent=f.name;
-      grid.appendChild(c);
-    });
-    sortMode==='custom'?sync():applySort();
-  }
-
-  grid.addEventListener('animationend',e=>e.target.classList.remove('fresh'));
-  grid.addEventListener('click',e=>{
-    const b=e.target.closest('button[data-a]');if(!b)return;
-    const c=b.closest('.card'),a=b.dataset.a,it=get(c.dataset.id);
-    if(a==='x'){URL.revokeObjectURL(it.url);items=items.filter(i=>i!==it);dropCache(it.id);c.remove()}
-    else if(a==='rl'||a==='rr'){it.rot+=a==='rl'?-90:90;c.querySelector('.img').style.transform='rotate('+it.rot+'deg)'}
-    else if(a==='l'&&c.previousElementSibling){grid.insertBefore(c,c.previousElementSibling);setSort('custom')}
-    else if(a==='r'&&c.nextElementSibling){grid.insertBefore(c.nextElementSibling,c);setSort('custom')}
-    sync();
-  });
-  grid.addEventListener('dragstart',e=>{
-    const c=e.target.closest('.card');if(!c)return;
-    dragEl=c;startOrder=order();c.classList.add('drag');e.dataTransfer.effectAllowed='move';
-    try{e.dataTransfer.setData('text/plain','card')}catch(_){}
-  });
-  grid.addEventListener('dragover',e=>{
-    const c=e.target.closest('.card');if(!dragEl||!c||c===dragEl)return;
-    e.preventDefault();
-    const r=c.getBoundingClientRect();
-    grid.insertBefore(dragEl,(e.clientX-r.left)>r.width/2?c.nextSibling:c);
-  });
-  grid.addEventListener('dragend',()=>{
-    if(!dragEl)return;
-    dragEl.classList.remove('drag');dragEl=null;
-    if(order()!==startOrder)setSort('custom');
-    sync();
-  });
-  const order=()=>[...grid.children].map(c=>c.dataset.id).join();
-
-  function sync(){
-    items=[...grid.children].map(c=>get(c.dataset.id)).filter(Boolean);
-    [...grid.children].forEach((c,i)=>c.querySelector('.num').textContent=i+1);
-    const has=items.length>0;
-    $('#n').textContent=items.length;
-    ['#bar','#panel','#hint','#dock'].forEach(s=>$(s).classList.toggle('show',has));
-    scheduleEst();
-  }
-
-  /* ---------- sorting ---------- */
-  function setSort(m){
-    sortMode=m;
-    document.querySelectorAll('#sort button').forEach(b=>b.classList.toggle('on',b.dataset.s===m));
-    if(m!=='custom')applySort();
-  }
-  function applySort(){
-    const d=sortMode==='az'?1:-1,nm=c=>get(c.dataset.id).file.name;
-    [...grid.children].sort((a,b)=>d*nm(a).localeCompare(nm(b),undefined,{numeric:true,sensitivity:'base'})).forEach(c=>grid.appendChild(c));
-    sync();
-  }
-  $('#sort').addEventListener('click',e=>{if(e.target.dataset.s)setSort(e.target.dataset.s)});
-
-  /* ---------- upload ---------- */
-  drop.addEventListener('click',()=>input.click());
-  drop.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click()}});
-  input.addEventListener('change',()=>{addFiles(input.files);input.value=''});
-  ['dragenter','dragover'].forEach(t=>window.addEventListener(t,e=>{
-    if(e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){e.preventDefault();drop.classList.add('over')}
-  }));
-  ['dragleave','drop'].forEach(t=>window.addEventListener(t,e=>{if(t==='drop'||e.relatedTarget===null)drop.classList.remove('over')}));
-  window.addEventListener('drop',e=>{
-    if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){e.preventDefault();addFiles(e.dataTransfer.files)}
-  });
-
-  /* ---------- settings ---------- */
-  $('#mode').addEventListener('click',e=>{
-    const m=e.target.dataset.m;if(!m)return;mode=m;
-    document.querySelectorAll('#mode button').forEach(b=>b.classList.toggle('on',b===e.target));
-    $('#bgRow').classList.toggle('show',m==='a4');
-    scheduleEst();
-  });
-  $('#bg').addEventListener('input',()=>{$('#bgv').textContent=bg().toUpperCase();scheduleEst()});
-  const rotAll=d=>{items.forEach(it=>{it.rot+=d;grid.querySelector('[data-id="'+it.id+'"] .img').style.transform='rotate('+it.rot+'deg)'});scheduleEst()};
-  $('#rotL').addEventListener('click',()=>rotAll(-90));
-  $('#rotR').addEventListener('click',()=>rotAll(90));
-  $('#clear').addEventListener('click',()=>{items.forEach(i=>URL.revokeObjectURL(i.url));items=[];cache.clear();grid.innerHTML='';sync()});
-  $('#reset').addEventListener('click',function(){
-    if(items.length&&!this.classList.contains('sure')){
-      this.classList.add('sure');this.textContent='Click again to start over';
-      setTimeout(()=>{this.classList.remove('sure');this.textContent='↻ New project'},3000);return;
-    }
-    location.reload();
-  });
-
-  /* ---------- image encoding (cached) ---------- */
-  function loadImg(url){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>rej(new Error('decode'));im.src=url})}
-  const key=it=>it.id+'|'+rotOf(it)+'|'+(mode==='a4'?bg():'w');
-  function dropCache(id,keep){for(const k of [...cache.keys()])if(k.startsWith(id+'|')&&k!==keep)cache.delete(k)}
-  async function enc(it){
-    const k=key(it);if(cache.has(k))return cache.get(k);
-    const im=await loadImg(it.url),r=rotOf(it),sw=r%180!==0;
-    const iw=im.naturalWidth,ih=im.naturalHeight,w=sw?ih:iw,h=sw?iw:ih;
-    const cv=document.createElement('canvas');cv.width=w;cv.height=h;
-    const g=cv.getContext('2d');
-    g.fillStyle=mode==='a4'?bg():'#ffffff';g.fillRect(0,0,w,h);
-    g.translate(w/2,h/2);g.rotate(r*Math.PI/180);g.drawImage(im,-iw/2,-ih/2);
-    const blob=await new Promise(res=>cv.toBlob(res,'image/jpeg',0.92));
-    const v={w,h,data:new Uint8Array(await blob.arrayBuffer())};
-    dropCache(it.id,k);cache.set(k,v);return v;
-  }
-
-  /* ---------- size estimate ---------- */
-  function scheduleEst(){
-    clearTimeout(estTimer);const t=++estTok;
-    if(!items.length)return;
-    $('#est').textContent='Estimating size…';
-    estTimer=setTimeout(async()=>{
-      let sum=1000;
-      try{for(const it of items){const v=await enc(it);if(t!==estTok)return;sum+=v.data.length+600}}
-      catch(e){if(t===estTok)$('#est').textContent='Size unavailable';return}
-      if(t===estTok)$('#est').textContent='Estimated size ≈ '+fmt(sum);
-    },350);
-  }
-
-  /* ---------- MD5 + RC4 (for password) ---------- */
-  function md5(data){
-    const K=new Uint32Array(64),S=[7,12,17,22,5,9,14,20,4,11,16,23,6,10,15,21];
-    for(let i=0;i<64;i++)K[i]=Math.floor(Math.abs(Math.sin(i+1))*4294967296)>>>0;
-    const n=data.length,pl=((n+8>>6)+1)<<6,m=new Uint8Array(pl);
-    m.set(data);m[n]=0x80;
-    const dv=new DataView(m.buffer);dv.setUint32(pl-8,(n*8)>>>0,true);dv.setUint32(pl-4,Math.floor(n/536870912),true);
-    let a0=0x67452301,b0=0xefcdab89,c0=0x98badcfe,d0=0x10325476;
-    for(let o=0;o<pl;o+=64){
-      let A=a0,B=b0,C=c0,D=d0;
-      for(let i=0;i<64;i++){
-        let F,g;
-        if(i<16){F=(B&C)|(~B&D);g=i}else if(i<32){F=(D&B)|(~D&C);g=(5*i+1)&15}
-        else if(i<48){F=B^C^D;g=(3*i+5)&15}else{F=C^(B|~D);g=(7*i)&15}
-        F=(F+A+K[i]+dv.getUint32(o+g*4,true))>>>0;
-        A=D;D=C;C=B;
-        const s=S[(i>>4)*4+(i&3)];
-        B=(B+((F<<s)|(F>>>(32-s))))>>>0;
-      }
-      a0=(a0+A)>>>0;b0=(b0+B)>>>0;c0=(c0+C)>>>0;d0=(d0+D)>>>0;
-    }
-    const out=new Uint8Array(16),ov=new DataView(out.buffer);
-    ov.setUint32(0,a0,true);ov.setUint32(4,b0,true);ov.setUint32(8,c0,true);ov.setUint32(12,d0,true);
-    return out;
-  }
-  function rc4(k,d){
-    const s=new Uint8Array(256);for(let i=0;i<256;i++)s[i]=i;
-    let j=0;for(let i=0;i<256;i++){j=(j+s[i]+k[i%k.length])&255;[s[i],s[j]]=[s[j],s[i]]}
-    const o=new Uint8Array(d.length);let a=0,b=0;
-    for(let n=0;n<d.length;n++){a=(a+1)&255;b=(b+s[a])&255;[s[a],s[b]]=[s[b],s[a]];o[n]=d[n]^s[(s[a]+s[b])&255]}
-    return o;
-  }
-  const PAD=Uint8Array.from([0x28,0xBF,0x4E,0x5E,0x4E,0x75,0x8A,0x41,0x64,0x00,0x4E,0x56,0xFF,0xFA,0x01,0x08,0x2E,0x2E,0x00,0xB6,0xD0,0x68,0x3E,0x80,0x2F,0x0C,0xA9,0xFE,0x64,0x53,0x69,0x7A]);
-  const TE=new TextEncoder();
-  const cat=(...a)=>{const o=new Uint8Array(a.reduce((s,x)=>s+x.length,0));let p=0;a.forEach(x=>{o.set(x,p);p+=x.length});return o};
-  const pad32=b=>cat(b.slice(0,32),PAD).slice(0,32);
-  const hex=u=>Array.from(u,b=>b.toString(16).padStart(2,'0')).join('');
-  const xorK=(k,i)=>k.map(b=>b^i);
-  function setupEnc(pw){   // standard security handler, 128-bit RC4 (V2/R3)
-    const up=pad32(TE.encode(pw)),ow=pad32(crypto.getRandomValues(new Uint8Array(16)));
-    let h=md5(ow);for(let i=0;i<50;i++)h=md5(h);
-    const ok=h.slice(0,16);let O=rc4(ok,up);
-    for(let i=1;i<=19;i++)O=rc4(xorK(ok,i),O);
-    const id=crypto.getRandomValues(new Uint8Array(16));
-    let k=md5(cat(up,O,Uint8Array.from([0xFC,0xFF,0xFF,0xFF]),id));
-    for(let i=0;i<50;i++)k=md5(k.slice(0,16));
-    k=k.slice(0,16);
-    let U=rc4(k,md5(cat(PAD,id)));
-    for(let i=1;i<=19;i++)U=rc4(xorK(k,i),U);
-    return{k,O,U:cat(U,new Uint8Array(16)),id};
-  }
-
-  /* ---------- PDF writer ---------- */
-  function buildPdf(pages,meta,pw){
-    const E=pw?setupEnc(pw):null,parts=[],off=[];let len=0;
-    const push=x=>{const u=typeof x==='string'?TE.encode(x):x;parts.push(u);len+=u.length};
-    const f=n=>(+n.toFixed(2)).toString(),f3=n=>(+n.toFixed(3)).toString();
-    const okey=n=>md5(cat(E.k,Uint8Array.from([n&255,(n>>8)&255,(n>>16)&255,0,0]))).slice(0,16);
-    const sdata=(n,d)=>E?rc4(okey(n),d):d;
-    const total=2+pages.length*3,metaKeys=Object.keys(meta);
-    let nxt=total+1;const infoN=metaKeys.length?nxt++:0,encN=E?nxt++:0;
-    push('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
-    off[1]=len;push('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
-    off[2]=len;push('2 0 obj\n<< /Type /Pages /Count '+pages.length+' /Kids ['+pages.map((_,i)=>(3+i*3)+' 0 R').join(' ')+'] >>\nendobj\n');
-    pages.forEach((p,i)=>{
-      const pn=3+i*3,cn=pn+1,im=pn+2;
-      off[pn]=len;push(pn+' 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+f(p.pw)+' '+f(p.ph)+'] /Resources << /XObject << /Im0 '+im+' 0 R >> >> /Contents '+cn+' 0 R >>\nendobj\n');
-      const cs=TE.encode((p.bg?p.bg.map(f3).join(' ')+' rg 0 0 '+f(p.pw)+' '+f(p.ph)+' re f ':'')+'q '+f(p.dw)+' 0 0 '+f(p.dh)+' '+f(p.dx)+' '+f(p.dy)+' cm /Im0 Do Q');
-      off[cn]=len;push(cn+' 0 obj\n<< /Length '+cs.length+' >>\nstream\n');push(sdata(cn,cs));push('\nendstream\nendobj\n');
-      off[im]=len;push(im+' 0 obj\n<< /Type /XObject /Subtype /Image /Width '+p.w+' /Height '+p.h+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+p.data.length+' >>\nstream\n');
-      push(sdata(im,p.data));push('\nendstream\nendobj\n');
-    });
-    if(infoN){
-      const str=s=>{const u=new Uint8Array(2+s.length*2);u[0]=0xFE;u[1]=0xFF;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);u[2+i*2]=c>>8;u[3+i*2]=c&255}return '<'+hex(sdata(infoN,u))+'>'};
-      off[infoN]=len;push(infoN+' 0 obj\n<< '+metaKeys.map(k=>'/'+k+' '+str(meta[k])).join(' ')+' >>\nendobj\n');
-    }
-    if(encN){off[encN]=len;push(encN+' 0 obj\n<< /Filter /Standard /V 2 /R 3 /Length 128 /P -4 /O <'+hex(E.O)+'> /U <'+hex(E.U)+'> >>\nendobj\n')}
-    const xr=len;let x='xref\n0 '+nxt+'\n0000000000 65535 f \n';
-    for(let n=1;n<nxt;n++)x+=String(off[n]).padStart(10,'0')+' 00000 n \n';
-    push(x+'trailer\n<< /Size '+nxt+' /Root 1 0 R'+(infoN?' /Info '+infoN+' 0 R':'')+(E?' /Encrypt '+encN+' 0 R /ID [<'+hex(E.id)+'> <'+hex(E.id)+'>]':'')+' >>\nstartxref\n'+xr+'\n%%EOF');
-    return new Blob(parts,{type:'application/pdf'});
-  }
-
-  function layout(p){
-    if(mode==='a4'){
-      const pw=595.28,ph=841.89,m=28,s=Math.min((pw-2*m)/p.w,(ph-2*m)/p.h),c=bg();
-      p.pw=pw;p.ph=ph;p.dw=p.w*s;p.dh=p.h*s;p.dx=(pw-p.dw)/2;p.dy=(ph-p.dh)/2;
-      p.bg=[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)/255);
-    }else{
-      const s=Math.min(1,842/Math.max(p.w,p.h));
-      p.pw=p.dw=p.w*s;p.ph=p.dh=p.h*s;p.dx=p.dy=0;
-    }
-    return p;
-  }
-
-  /* ---------- export ---------- */
-  $('#go').addEventListener('click',async()=>{
-    const btn=$('#go'),lab=$('#gol');
-    if(!items.length)return;
-    btn.disabled=true;
-    try{
-      const pages=[];
-      for(let i=0;i<items.length;i++){
-        lab.textContent='Processing '+(i+1)+' / '+items.length+'…';
-        pages.push(layout({...await enc(items[i])}));
-        await new Promise(r=>setTimeout(r,0));
-      }
-      lab.textContent='Building PDF…';
-      const meta={};
-      ['Title','Author','Subject','Keywords'].forEach(k=>{const v=$('#m-'+k).value.trim();if(v)meta[k]=v});
-      const pw=$('#pw').value;
-      const blob=buildPdf(pages,meta,pw);
-      let name=$('#fname').value.replace(/\.pdf$/i,'').replace(/[\\/:*?"<>|]+/g,'').trim()||'images';
-      const url=URL.createObjectURL(blob),a=document.createElement('a');
-      a.href=url;a.download=name+'.pdf';document.body.appendChild(a);a.click();a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),30000);
-      toast('Your PDF is ready'+(pw?' (password protected)':''),'ok');
-    }catch(err){toast('Could not convert one of the images','bad')}
-    lab.textContent='Convert to PDF';btn.disabled=false;
-  });
-})();
-</script>
-</body>
-</html>
+<div id="site-footer"></div>
+<script src="tools/manifest.js"></script>
+<script src="assets/js/site.js" data-root=""></script>
+<script src="assets/js/hub.js"></script>
+</body></html>

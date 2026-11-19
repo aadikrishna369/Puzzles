@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Images → PDF</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="glow"><i></i><i></i></div>
+<main>
+  <button class="reset" id="reset">↻ New project</button>
+  <header>
+    <h1>Images to PDF</h1>
+    <p>Add your images, arrange them, and get a single PDF. Everything stays in your browser.</p>
+  </header>
+
+  <div id="drop" tabindex="0" role="button" aria-label="Add images">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
+    <b>Drag &amp; drop images here</b>
+    <span>or <u>browse your computer</u> · any number of files · JPG, PNG, WebP, GIF, BMP</span>
+    <input id="file" type="file" accept="image/*" multiple hidden>
+  </div>
+
+  <div class="bar" id="bar">
+    <div class="count"><b id="n">0</b> images</div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <button class="link" id="rotL" title="Rotate all 90° left">↺ Rotate all</button>
+      <button class="link" id="rotR" title="Rotate all 90° right">↻ Rotate all</button>
+      <button class="link del" id="clear">Clear all</button>
+    </div>
+  </div>
+
+  <section class="panel" id="panel">
+    <label class="f wide"><span>File name</span><div class="fn"><input id="fname" type="text" value="images" maxlength="80" spellcheck="false"><em>.pdf</em></div></label>
+    <div class="f"><span>Page layout</span><div class="seg" id="mode"><button data-m="fit" class="on">Fit to image</button><button data-m="a4">A4 pages</button></div></div>
+    <div class="f" id="bgRow"><span>A4 page background</span><div class="clr"><input type="color" id="bg" value="#ffffff"><code id="bgv">#FFFFFF</code></div></div>
+    <div class="f"><span>Image order</span><div class="seg" id="sort"><button data-s="custom" class="on">Custom</button><button data-s="az">A–Z</button><button data-s="za">Z–A</button></div></div>
+    <label class="f"><span>Password (optional)</span><input id="pw" type="password" placeholder="None" autocomplete="new-password"></label>
+    <details class="wide"><summary>PDF metadata <small>(none by default)</small></summary>
+      <div class="mg">
+        <input type="text" id="m-Title" placeholder="Title">
+        <input type="text" id="m-Author" placeholder="Author">
+        <input type="text" id="m-Subject" placeholder="Subject">
+        <input type="text" id="m-Keywords" placeholder="Keywords">
+      </div>
+    </details>
+  </section>
+  <p class="hint" id="hint">Drag cards to reorder, or use the ◀ ▶ buttons. Page 1 is first.</p>
+  <div id="grid"></div>
+</main>
+
+<div class="dock" id="dock">
+  <span id="est"></span>
+  <button id="go"><span class="spin"></span><span id="gol">Convert to PDF</span></button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

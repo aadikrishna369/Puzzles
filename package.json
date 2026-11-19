@@ -1,0 +1,10 @@
+{
+  "name": "puzzles",
+  "version": "1.0.0",
+  "description": "Puzzles - a hub of everyday web tools",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "build": "node build.js"
+  }
+}

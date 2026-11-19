@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All tools - Puzzles</title>
+<meta name="description" content="Browse every Puzzles tool.">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main>
+<section class="wrap tools-top">
+  <span class="kicker">The toolbox</span>
+  <h1 style="font-size:clamp(34px,5vw,54px);margin:10px 0 10px">All <span class="grad">tools</span></h1>
+  <p class="sub">Search, filter and open anything in the Puzzles toolbox. New tools appear automatically.</p>
+  <div class="controls"><input class="search" id="q" type="search" placeholder="Search tools&hellip;" aria-label="Search tools"><div class="cats" id="cats"></div></div>
+  <div class="grid" id="hub"></div>
+  <div class="empty" id="empty"><h3>Nothing matches</h3><p>Try a different search, or add a new folder inside <code>tools/</code>.</p></div>
+</section>
+</main>
+<div id="site-footer"></div>
+<script src="../tools/manifest.js"></script>
+<script src="../assets/js/site.js" data-root="../"></script>
+<script src="../assets/js/hub.js"></script>
+</body></html>
