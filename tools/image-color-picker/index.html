@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Color Picker — Puzzles</title>
+<meta name="description" content="Pick colors from any image, extract palettes and export them. Nothing is uploaded.">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="glow g1" aria-hidden="true"></div>
+<div class="glow g2" aria-hidden="true"></div>
+<div class="overlay" aria-hidden="true"><p>Drop to replace the current image</p></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<div class="wrap">
+  <nav class="topbar">
+    <a class="ghost-btn" href="../index.html">← All tools</a>
+    <button type="button" class="ghost-btn danger" id="resetBtn" hidden>↻ New project</button>
+  </nav>
+
+  <header class="head rise">
+    <h1>Image Color Picker</h1>
+    <p>Click anywhere on an image to grab exact colors, or let it pull out the palette for you. Everything stays on your device.</p>
+  </header>
+
+  <section id="start" class="rise d1" aria-label="Load an image">
+    <label class="drop" id="drop" for="fileInput">
+      <span class="drop-icon" aria-hidden="true">🎨</span>
+      <strong>Drop an image here</strong>
+      <span class="muted">or <u>browse your computer</u> · paste with Ctrl + V</span>
+      <span class="fmt">PNG · JPEG · WebP · GIF · BMP · SVG · AVIF</span>
+      <input class="sr" type="file" id="fileInput" accept="image/*">
+    </label>
+  </section>
+
+  <section id="work" class="grid" hidden>
+    <div class="card pop a-img">
+      <div class="card-head">
+        <h2>Image</h2>
+        <button type="button" class="ghost-btn" id="replaceBtn">Choose another image…</button>
+      </div>
+      <div class="stage" id="stage">
+        <div class="cvwrap">
+          <canvas id="cv" tabindex="0" aria-label="Image. Click to pick a color. Use arrow keys to move and Enter to pick."></canvas>
+          <canvas id="ov" aria-hidden="true"></canvas>
+        </div>
+      </div>
+      <p class="pill small" id="coord">Hover over the image to inspect pixels</p>
+      <p class="small muted" id="meta"></p>
+    </div>
+
+    <div class="side a-side">
+      <div class="card pop d1">
+        <div class="card-head">
+          <h2>Magnifier</h2>
+          <div class="seg" id="zoomSeg" role="group" aria-label="Magnifier zoom">
+            <button type="button" data-n="9" aria-pressed="false">Max</button>
+            <button type="button" data-n="15" aria-pressed="true">Mid</button>
+            <button type="button" data-n="21" aria-pressed="false">Wide</button>
+          </div>
+        </div>
+        <canvas id="loupe" width="315" height="315" aria-hidden="true"></canvas>
+        <div class="live">
+          <span class="dot" id="liveSw"></span>
+          <div><strong id="liveHex">—</strong><div class="small muted" id="liveRgb">x: —, y: —</div></div>
+        </div>
+        <p class="small muted">Click the image to add the highlighted pixel to your picks.</p>
+      </div>
+    </div>
+
+    <div class="card pop d1 a-pal">
+      <h2>Dominant color &amp; palette</h2>
+      <div class="dom" id="dom"></div>
+      <div class="field gap"><label for="palN">Palette size <output id="palOut">6</output></label>
+        <input type="range" id="palN" min="3" max="12" step="1" value="6"></div>
+      <div class="swatches" id="pal"></div>
+      <button type="button" class="ghost-btn gap" id="addAll">Add all to picked colors</button>
+    </div>
+
+    <div class="card pop d2 a-pick">
+      <div class="card-head">
+        <h2>Picked colors <output id="pickCount">0</output></h2>
+        <button type="button" class="ghost-btn danger" id="clearPicks" disabled>Clear all</button>
+      </div>
+      <p class="muted empty" id="empty">Nothing yet — click anywhere on the image to pick a color.</p>
+      <div class="picks" id="picks"></div>
+    </div>
+
+    <div class="card pop d2 a-exp">
+      <h2>Export</h2>
+      <div class="exprow">
+        <div><label id="srcLbl">Colors to export</label>
+          <div class="seg" id="srcSeg" role="group" aria-labelledby="srcLbl">
+            <button type="button" data-v="pal" aria-pressed="true">Extracted palette</button>
+            <button type="button" data-v="pick" aria-pressed="false">Picked colors</button>
+          </div></div>
+        <div><label id="fmtLbl">Format</label>
+          <div class="seg" id="fmtSeg" role="group" aria-labelledby="fmtLbl">
+            <button type="button" data-v="json" aria-pressed="true">JSON</button>
+            <button type="button" data-v="png" aria-pressed="false">PNG</button>
+            <button type="button" data-v="txt" aria-pressed="false">TXT</button>
+            <button type="button" data-v="css" aria-pressed="false">CSS</button>
+          </div></div>
+      </div>
+      <p class="small muted" id="expNote"></p>
+    </div>
+  </section>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <button type="button" class="btn-pri" id="expBtn">Export palette ↓</button>
+  <button type="button" class="btn-sec" id="copyBtn">Copy</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

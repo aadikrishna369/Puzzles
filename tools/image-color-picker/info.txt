@@ -1,0 +1,10 @@
+# Image Color Picker: shown on the Puzzles hub
+name: Image Color Picker
+tagline: Point at any pixel, get the perfect color.
+description: Drop or paste an image, click anywhere to pick exact colors and zoom in with a pixel‑grid magnifier. Copy HEX, RGB, HSL and CMYK values with human‑readable names, then let it extract the dominant color and a full palette. Export your colors as JSON, PNG, TXT or CSS — all in your browser, so your images never leave your device.
+category: Images
+icon: 🎨
+tags: color, colour, picker, eyedropper, palette, dominant color, hex, rgb, hsl, cmyk
+status: live
+featured: false
+order: 11

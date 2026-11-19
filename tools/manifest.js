@@ -17,5 +17,52 @@ window.PUZZLES_TOOLS = [
     "featured": true,
     "order": 1,
     "thumbnail": "assets/thumbnail.png"
+  },
+  {
+    "slug": "image-resizer",
+    "name": "Image Resizer",
+    "tagline": "Resize any image your way — pixel‑perfect or silky smooth.",
+    "description": "Drop, paste or load an image from a URL, then resize it by pixels, percent or preset with a locked or free aspect ratio. Pick the resampling algorithm, from nearest‑neighbour for crisp pixel art to Lanczos for photos, and download as PNG, JPEG or WebP. Everything runs in your browser, so your files never leave your device.",
+    "category": "Images",
+    "icon": "🖼️",
+    "tags": [
+      "image",
+      "resize",
+      "scale",
+      "pixel art",
+      "upscale",
+      "downscale",
+      "png",
+      "jpeg",
+      "webp"
+    ],
+    "status": "live",
+    "featured": false,
+    "order": 10,
+    "thumbnail": "assets/thumbnail.png"
+  },
+  {
+    "slug": "image-color-picker",
+    "name": "Image Color Picker",
+    "tagline": "Point at any pixel, get the perfect color.",
+    "description": "Drop or paste an image, click anywhere to pick exact colors and zoom in with a pixel‑grid magnifier. Copy HEX, RGB, HSL and CMYK values with human‑readable names, then let it extract the dominant color and a full palette. Export your colors as JSON, PNG, TXT or CSS — all in your browser, so your images never leave your device.",
+    "category": "Images",
+    "icon": "🎨",
+    "tags": [
+      "color",
+      "colour",
+      "picker",
+      "eyedropper",
+      "palette",
+      "dominant color",
+      "hex",
+      "rgb",
+      "hsl",
+      "cmyk"
+    ],
+    "status": "live",
+    "featured": false,
+    "order": 11,
+    "thumbnail": "assets/thumbnail.png"
   }
 ];
