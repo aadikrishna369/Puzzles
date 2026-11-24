@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Compressor – Puzzles</title>
+<meta name="description" content="Compress PNG, JPG and WebP images privately in your browser.">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="blob b1" aria-hidden="true"></div>
+<div class="blob b2" aria-hidden="true"></div>
+
+<div class="topbar">
+  <a class="ghost" href="../index.html">← All tools</a>
+  <button class="ghost" id="reset" type="button" hidden>↻ New project</button>
+</div>
+
+<main class="wrap">
+  <header class="hero rise">
+    <h1>Image Compressor</h1>
+    <p>Shrink PNG, JPG and WebP images in seconds. Everything happens in your browser—your files never leave this device.</p>
+  </header>
+
+  <label class="drop rise" id="drop" for="file">
+    <span class="di" aria-hidden="true">🖼️</span>
+    <span class="dt">Drop images here</span>
+    <span class="ds">Paste with Ctrl/⌘ + V, or <span class="link">browse your device</span></span>
+    <input id="file" type="file" accept="image/*" multiple>
+  </label>
+
+  <section class="panel rise" aria-label="Compression settings">
+    <div class="row">
+      <div class="lbl" id="lblFmt">Output format</div>
+      <div class="seg" role="group" aria-labelledby="lblFmt" id="fmtSeg">
+        <button type="button" data-fmt="png" aria-pressed="false">PNG</button>
+        <button type="button" data-fmt="jpg" aria-pressed="false">JPG</button>
+        <button type="button" data-fmt="jpeg" aria-pressed="false">JPEG</button>
+        <button type="button" data-fmt="webp" aria-pressed="true">WEBP</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="lbl" id="lblLvl">Compression level</div>
+      <div class="seg" role="group" aria-labelledby="lblLvl" id="preSeg">
+        <button type="button" data-preset="low" aria-pressed="false">Low</button>
+        <button type="button" data-preset="medium" aria-pressed="true">Medium</button>
+        <button type="button" data-preset="high" aria-pressed="false">High</button>
+      </div>
+    </div>
+    <div class="slider">
+      <input type="range" id="level" min="5" max="90" step="1" value="45" aria-label="Compression level">
+      <output id="levelVal" for="level">Compression 45% (quality 55%)</output>
+    </div>
+    <p class="hint" id="hint"></p>
+  </section>
+
+  <section class="stats rise" aria-label="Size summary" aria-live="polite">
+    <div class="stat"><span class="sl">Current size</span><strong id="sCur">—</strong></div>
+    <div class="stat"><span class="sl">Estimated size</span><strong id="sEst">—</strong></div>
+    <div class="stat"><span class="sl">You save</span><strong id="sSave" class="ok">—</strong></div>
+  </section>
+
+  <ul class="list" id="list" aria-label="Images"></ul>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <label class="btn2" for="file">+ Add more</label>
+  <button class="ghost danger" id="clear" type="button">Clear all</button>
+  <button class="primary" id="dl" type="button">Download →</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>

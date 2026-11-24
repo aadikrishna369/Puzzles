@@ -19,6 +19,28 @@ window.PUZZLES_TOOLS = [
     "thumbnail": "assets/thumbnail.png"
   },
   {
+    "slug": "image-compressor",
+    "name": "Image Compressor",
+    "tagline": "Shrink images in seconds—without them ever leaving your device.",
+    "description": "Drop, paste or upload images and compress them to PNG, JPG, JPEG or WebP with a simple slider or Low, Medium and High presets. See each file’s current size next to its estimated final size before you download. Everything runs in your browser, so your pictures stay private.",
+    "category": "Image Tools",
+    "icon": "🗜️",
+    "tags": [
+      "image",
+      "compress",
+      "optimize",
+      "png",
+      "jpg",
+      "webp",
+      "resize",
+      "privacy"
+    ],
+    "status": "live",
+    "featured": false,
+    "order": 10,
+    "thumbnail": "assets/thumbnail.png"
+  },
+  {
     "slug": "image-resizer",
     "name": "Image Resizer",
     "tagline": "Resize any image your way — pixel‑perfect or silky smooth.",
